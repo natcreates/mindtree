@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mindtree</title>
+</head>
+<body>
+Hello
+<form action="/values" method="post">
+    <div>
+        <label>
+            Name
+            <input name="name"/>
+        </label>
+    </div>
+    <button>Save</button>
+</form>
+
+<form action="/activities" method="post">
+    <div>
+        <label>
+            Name
+            <input name="name"/>
+        </label>
+    </div>
+    <div>
+    </div>
+    <div>
+        <label>
+            Value
+            <input name="value"/>
+        </label>
+        <label>
+            Weight
+            <input name="weight" type="number"/>
+        </label>
+    </div>
+    <button>Save</button>
+</form>
+<mindtree-app></mindtree-app>
+<script type="module">
+    import {LitElement} from 'https://unpkg.com/lit-element?module';
+
+    class MindtreeApp extends LitElement {
+        connectedCallback() {
+            super.connectedCallback();
+            console.log('lit element connected');
+        }
+    }
+
+    customElements.define('mindtree-app', MindtreeApp);
+</script>
+</body>
+</html>
