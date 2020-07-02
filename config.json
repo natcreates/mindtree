@@ -1,0 +1,9 @@
+{
+ "pg": {
+   "user": "me",
+   "host": "localhost",
+   "database": "mindtree",
+   "password": "password",
+   "port": 5432
+ }
+}
