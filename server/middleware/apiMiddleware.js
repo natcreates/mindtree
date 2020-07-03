@@ -1,11 +1,29 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export default ({pg, testValueUuid}) => {
+    const getValues = async (req, res, next) => {
+        try {
+            const values = await pg('read-values');
+            const activities = await pg('read-activities');
+            return res.status(200).send({ values, activities });
+        } catch (error) {
+            next(error);
+        }
+    };
     const removeValue = async (req, res, next) => {
         const { valueId } = req.params;
         try {
             await pg('mark-value-as-deleted', [valueId]);
-            res.status(204);
+            return res.sendStatus(204);
+        } catch (error) {
+            next(error);
+        }
+    };
+    const removeValues = async (req, res, next) => {
+        try {
+            await pg('mark-all-values-as-deleted');
+            console.log('removing');
+            return res.sendStatus(204);
         } catch (error) {
             next(error);
         }
@@ -14,7 +32,7 @@ export default ({pg, testValueUuid}) => {
         const { name, description = '' } = req.body;
         try {
             await pg('add-value', Object.values({ value_id: uuidv4(), name, description }));
-            res.status(200);
+            return res.sendStatus(204);
         } catch (error) {
             next(error);
         }
@@ -24,7 +42,7 @@ export default ({pg, testValueUuid}) => {
         try {
             await pg('add-activity', Object.values({ activityId, name, description }));
             await pg('add-weighting', Object.values({ activityId, valueId, weight }));
-            res.status(200);
+            res.sendStatus(204);
         } catch (error) {
             next(error);
         }
@@ -33,15 +51,17 @@ export default ({pg, testValueUuid}) => {
         const { activityId } = req.params;
         try {
             await pg('remove-activity', [activityId]);
-            res.status(204);
+            return res.sendStatus(204);
         } catch (error) {
             next(error);
         }
     };
     return {
         removeValue,
+        removeValues,
         addValue,
         addActivity,
         removeActivity,
+        getValues,
     }
 };

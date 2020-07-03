@@ -3,4 +3,3 @@ INSERT INTO weighting (
  value_id,
  weight
 ) VALUES ($1, $2, $3);
-

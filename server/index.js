@@ -7,13 +7,14 @@ import renderMiddleware from './middleware/renderMiddleware';
 import apiMiddleware from './middleware/apiMiddleware';
 
 const testValueUuid = uuidv4();
-(async function() {
+
+export const start = async () => {
     const pg = await db();
     await pg('create-tables');
     await pg('dummy-data', [testValueUuid, uuidv4()]);
 
     const { dashboard, data } = renderMiddleware({ pg });
-    const { removeValue, addValue, addActivity, removeActivity } = apiMiddleware({ pg, testValueUuid });
+    const { removeValue, removeValues, addValue, getValues, addActivity, removeActivity } = apiMiddleware({ pg, testValueUuid });
 
     const app = express();
     app.use(bodyParser.json());
@@ -27,13 +28,25 @@ const testValueUuid = uuidv4();
 
     app.get('/', dashboard);
     app.get('/data', data);
+    app.get('/values', getValues);
     app.delete('/values/:valueId', removeValue);
+    app.delete('/values', removeValues);
     app.delete('/activities/:activityId', removeActivity);
     app.post('/values', addValue);
     app.post('/activities', addActivity);
 
     const server = http.createServer(app);
     server.listen(port);
-})();
+
+    return {
+        pg,
+        server,
+        app,
+    }
+};
+
+export const stop = async (server) => {
+    server.close();
+};
 
 

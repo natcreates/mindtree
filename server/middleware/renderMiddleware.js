@@ -3,7 +3,6 @@ import path from 'path';
 export default ({pg}) => {
     const dashboard = async (req, res, next) => {
         try {
-            const values = await pg('read-values');
             res.status(200).sendFile(path.join(__dirname, '../index.html'));
         } catch (error) {
             next(error);
@@ -13,7 +12,7 @@ export default ({pg}) => {
     const data = async (req, res, next) => {
         try {
             const values = await pg('read-values');
-            res.status(200).send(values.rows);
+            res.status(200).send(values);
         } catch (error) {
             next(error);
         }

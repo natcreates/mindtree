@@ -13,7 +13,6 @@ const loadSql = async () => {
     const globPromise = util.promisify(glob);
     const location = path.join(__dirname, './sql');
     const sqlFiles = await globPromise(`${location}/**/**.sql`, {});
-    console.log('sqlFiles:', sqlFiles)
     const allSql = {};
     sqlFiles.forEach((sqlFile) => {
         allSql[sqlFile.replace(`${location}/`, '').replace(/.sql$/, '')] = fs.readFileSync(sqlFile, {encoding: 'utf-8'});
@@ -28,9 +27,9 @@ const run = (queries) => async (queryName, values = []) => {
     console.log(`Running ${queryName}`);
 
     try {
-        const result = pool.query(...query);
+        const result = await pool.query(...query);
         await pool.end();
-        return result;
+        return result.rows;
     } catch (error) {
         console.log('Problem running query', error);
     }
