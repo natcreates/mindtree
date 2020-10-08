@@ -1,1 +1,3 @@
-SELECT * FROM weighting;
+SELECT * FROM weighting
+WHERE deleted = false
+ORDER BY weight DESC;

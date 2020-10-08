@@ -3,4 +3,4 @@ INSERT INTO activities (
  name,
  description
 ) VALUES ($1, $2, $3)
-ON CONFLICT (activity_id) DO UPDATE SET name = $3, description = $2;
+ON CONFLICT (activity_id) DO UPDATE SET name = $2, description = $3;

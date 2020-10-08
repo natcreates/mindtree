@@ -14,6 +14,7 @@ export default ({pg, testValueUuid}) => {
         const { valueId } = req.params;
         try {
             await pg('mark-value-as-deleted', [valueId]);
+            await pg('mark-weightings-as-deleted', [valueId]);
             return res.sendStatus(204);
         } catch (error) {
             next(error);
@@ -22,7 +23,6 @@ export default ({pg, testValueUuid}) => {
     const removeValues = async (req, res, next) => {
         try {
             await pg('mark-all-values-as-deleted');
-            console.log('removing');
             return res.sendStatus(204);
         } catch (error) {
             next(error);
