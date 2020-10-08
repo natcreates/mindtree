@@ -56,12 +56,22 @@ export default ({pg, testValueUuid}) => {
             next(error);
         }
     };
+    const logActivity = async (req, res, next) => {
+        const { activityId } = req.params;
+        try {
+            await pg('log-activity', [activityId]);
+            return res.sendStatus(204);
+        } catch (error) {
+            next(error);
+        }
+    };
     return {
         removeValue,
         removeValues,
         addValue,
         addActivity,
         removeActivity,
+        logActivity,
         getValues,
     }
 };

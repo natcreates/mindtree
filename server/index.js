@@ -14,7 +14,7 @@ export const start = async () => {
     await pg('dummy-data', [testValueUuid, uuidv4()]);
 
     const { dashboard, data } = renderMiddleware({ pg });
-    const { removeValue, removeValues, addValue, getValues, addActivity, removeActivity } = apiMiddleware({ pg, testValueUuid });
+    const { removeValue, removeValues, addValue, getValues, addActivity, removeActivity, logActivity } = apiMiddleware({ pg, testValueUuid });
 
     const app = express();
     app.use(bodyParser.json());
@@ -34,6 +34,7 @@ export const start = async () => {
     app.delete('/activities/:activityId', removeActivity);
     app.post('/values', addValue);
     app.post('/activities', addActivity);
+    app.put('/activities/:activityId', logActivity);
 
     const server = http.createServer(app);
     server.listen(port);

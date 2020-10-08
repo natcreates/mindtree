@@ -7,7 +7,7 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS values (
   value_id UUID NOT NULL UNIQUE PRIMARY KEY,
   name VARCHAR(30) NOT NULL UNIQUE,
-  description TEXT,
+  description TEXT DEFAULT '',
   deleted BOOLEAN NOT NULL DEFAULT FALSE,
   score INTEGER NOT NULL DEFAULT 0,
   UNIQUE (name, deleted)
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS values (
 CREATE TABLE IF NOT EXISTS activities (
   activity_id UUID NOT NULL PRIMARY KEY,
   name VARCHAR(30) NOT NULL,
-  description TEXT,
+  description TEXT DEFAULT '',
   deleted BOOLEAN NOT NULL DEFAULT FALSE,
   UNIQUE (activity_id)
 );
