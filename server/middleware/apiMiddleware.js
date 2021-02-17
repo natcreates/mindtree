@@ -1,11 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
 
+const calculateBalance = (values) => {
+    const total = values.reduce((acc, value) => acc + value.score, 0);
+    return values.map((value) => ({ percentage: (value.score / total) * 100, ...value }));
+};
+
 export default ({pg, testValueUuid}) => {
     const getValues = async (req, res, next) => {
         try {
             const values = await pg('read-values');
             const activities = await pg('read-activities');
-            return res.status(200).send({ values, activities });
+            return res.status(200).send({ values: calculateBalance(values), activities });
         } catch (error) {
             next(error);
         }

@@ -18,11 +18,7 @@ export const start = async () => {
 
     const app = express();
     app.use(bodyParser.json());
-    app.use(
-        bodyParser.urlencoded({
-            extended: true,
-        })
-    );
+    app.use(bodyParser.urlencoded({ extended: true }));
     const port = 8000;
     app.set('port', port);
 
