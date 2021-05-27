@@ -1,18 +1,20 @@
 import {LitElement, html} from 'lit-element';
-import { valuesList } from "./components/values-list";
-import { valueForm } from "./components/value-form";
-import { activitiesForm } from "./components/activities-form";
+import {valuesList} from "./components/values-list";
+import {valueForm} from "./components/value-form";
+import {activitiesForm} from "./components/activities-form";
+import {activitiesList} from "./components/activities-list";
 
 const errorMessage = html`<p style="color: red;">There was a problem saving your changes.</p>`;
 
 class MindtreeApp extends LitElement {
     static get properties() {
         return {
-            values: { type: Array },
-            activities: { type: Array },
-            error: { type: Boolean },
+            values: {type: Array},
+            activities: {type: Array},
+            error: {type: Boolean},
         }
     }
+
     connectedCallback() {
         super.connectedCallback();
         if (!this.values) {
@@ -21,10 +23,11 @@ class MindtreeApp extends LitElement {
     }
 
     async fetchData() {
-        const response  = await fetch('/values');
+        const response = await fetch('/values');
         const json = await response.json();
         this.values = json.values;
         this.activities = json.activities;
+        console.log(this.values);
     }
 
     async _addValue(e) {
@@ -33,45 +36,43 @@ class MindtreeApp extends LitElement {
         const input = this.shadowRoot.getElementById('valueName');
         const name = input.value;
         try {
-            await fetch('/values', {
+            const response = await fetch('/values', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name }),
+                body: JSON.stringify({name}),
             });
-            input.value = '';
-            this.values = [
-                ...this.values,
-                { name }
-            ];
-            this.error = false;
+            if (response.ok) {
+                const { value_id } = await response.json();
+                input.value = '';
+                this.values = [
+                    ...this.values,
+                    {name, value_id}
+                ];
+                this.error = false;
+            } else {
+                throw new Error('Bad response')
+            }
         } catch (error) {
             console.log(error);
             this.error = true;
         }
     }
 
-    _removeValue() {
-        return async (valueId) => {
-            const input = this.shadowRoot.getElementById('valueName');
-            const name = input.value;
-            try {
-                const response  = await fetch(`/values/${valueId}`, {
-                    method: 'DELETE',
-                });
-                if (response.ok) {
-                    input.value = '';
-                    this.error = false;
-                    this.values = [
-                        ...this.values,
-                        { name }
-                    ];
-                }
-            } catch (error) {
-                console.log(error);
-                this.error = true;
+    async _removeValue(e) {
+        const valueId = e.target.id;
+        try {
+            const response = await fetch(`/values/${valueId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                this.error = false;
+                this.values = this.values.filter((value) => value.value_id !== valueId);
             }
+        } catch (error) {
+            console.log(error);
+            this.error = true;
         }
     }
 
@@ -90,16 +91,17 @@ class MindtreeApp extends LitElement {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ name, valueId, weight }),
+                body: JSON.stringify({name, valueId, weight}),
             });
             if (response.ok) {
+                const { activity_id } = await response.json();
                 activityNameInput.value = '';
                 activityValueInput.value = '';
                 activityWeightInput.value = '';
                 this.error = false;
                 return this.activities = [
                     ...this.activities,
-                    { name, weight, value_id: valueId }
+                    {name, weight, value_id: valueId, activity_id}
                 ];
             } else {
                 throw error;
@@ -111,9 +113,24 @@ class MindtreeApp extends LitElement {
         }
     }
 
+    async _removeActivity(e) {
+        const activityId = e.target.id;
+        try {
+            const response = await fetch(`/activities/${activityId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                this.activities = this.activities.filter((activity) => activity.activity_id !== activityId);
+            }
+        } catch (error) {
+            console.log(error);
+            this.error = true;
+        }
+    }
+
     async _removeAllValues() {
         try {
-            const response = await fetch('/values', { method: 'DELETE' });
+            const response = await fetch('/values', {method: 'DELETE'});
             if (response.ok) {
                 this.error = false;
                 return this.values = [];
@@ -127,14 +144,15 @@ class MindtreeApp extends LitElement {
 
     render() {
         return html`
-               <h2>Values</h2>
-               ${valuesList(this.values, this._removeValue)}
-               ${valueForm(this._addValue, this._removeAllValues)}
-               <h2>Activities</h2>
-               ${activitiesForm(this._addActivity, this.values)}
+            <h2>Values</h2>
+            ${valuesList(this.values, this._removeValue)}
+            ${valueForm(this._addValue, this._removeAllValues)}
+            <h2>Activities</h2>
+            ${activitiesForm(this._addActivity, this.values)}
+            ${activitiesList(this.activities, this._removeActivity)}
 
-               ${this.error ? errorMessage : ''}
-            `;
+            ${this.error ? errorMessage : ''}
+        `;
     }
 }
 

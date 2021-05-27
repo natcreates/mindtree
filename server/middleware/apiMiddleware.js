@@ -35,19 +35,21 @@ export default ({pg, testValueUuid}) => {
     };
     const addValue = async (req, res, next) => {
         const { name, description = '' } = req.body;
+        const value_id = uuidv4();
         try {
-            await pg('add-value', Object.values({ value_id: uuidv4(), name, description }));
-            return res.sendStatus(204);
+            await pg('add-value', Object.values({ value_id, name, description }));
+            console.log('value_id', value_id);
+            return res.status(200).send({ value_id });
         } catch (error) {
             next(error);
         }
     };
     const addActivity = async (req, res, next) => {
-        const { name, description = '', weight, activityId = uuidv4(), valueId = testValueUuid } = req.body;
+        const { name, description = '', weight, activity_id = uuidv4(), valueId = testValueUuid } = req.body;
         try {
-            await pg('add-activity', Object.values({ activityId, name, description }));
-            await pg('add-weighting', Object.values({ activityId, valueId, weight }));
-            res.sendStatus(204);
+            await pg('add-activity', Object.values({ activity_id, name, description }));
+            await pg('add-weighting', Object.values({ activity_id, valueId, weight }));
+            return res.status(200).send({ activity_id });
         } catch (error) {
             next(error);
         }
@@ -55,7 +57,8 @@ export default ({pg, testValueUuid}) => {
     const removeActivity = async (req, res, next) => {
         const { activityId } = req.params;
         try {
-            await pg('remove-activity', [activityId]);
+            await pg('mark-activity-as-deleted', [activityId]);
+            await pg('mark-weightings-as-deleted', [activityId]);
             return res.sendStatus(204);
         } catch (error) {
             next(error);

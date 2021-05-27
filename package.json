@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "mocha 'test/**/*.js'",
-    "dev": "npm run build && nodemon index.js",
+    "dev": "parcel watch server/index.html --dist-dir dist & nodemon index.js",
     "build": "parcel build server/index.html --dist-dir dist"
   },
   "author": "",
