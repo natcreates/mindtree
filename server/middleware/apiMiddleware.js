@@ -38,7 +38,6 @@ export default ({pg, testValueUuid}) => {
         const value_id = uuidv4();
         try {
             await pg('add-value', Object.values({ value_id, name, description }));
-            console.log('value_id', value_id);
             return res.status(200).send({ value_id });
         } catch (error) {
             next(error);
@@ -67,8 +66,10 @@ export default ({pg, testValueUuid}) => {
     const logActivity = async (req, res, next) => {
         const { activityId } = req.params;
         try {
-            await pg('log-activity', [activityId]);
-            return res.sendStatus(204);
+            const response = await pg('log-activity', [activityId]);
+            const valueIds = response.map(({ value_id }) => value_id);
+            return res.status(200).send({ valueIds });
+
         } catch (error) {
             next(error);
         }
