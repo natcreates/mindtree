@@ -14,5 +14,6 @@ npm-debug.log.*
 *.sublime-*
 dist
 test/output/**/*.xml
-
+.parcel-cache/
+.dist/
 /test-results.xml

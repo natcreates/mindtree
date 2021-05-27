@@ -2,19 +2,20 @@
   "name": "mindtree",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "mocha 'test/**/*.js'",
-    "dev": "nodemon npm start"
+    "dev": "npm run build && nodemon index.js",
+    "build": "parcel build server/index.html --dist-dir dist"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/core": "^7.10.4",
-    "@babel/register": "^7.10.4",
+    "@babel/core": "^7.12.17",
+    "@babel/register": "^7.12.13",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "glob": "^7.1.6",
+    "lit-element": "^2.5.1",
     "pg": "^8.2.1",
     "pg-format": "^1.0.4",
     "uuid": "^8.2.0"
@@ -23,8 +24,9 @@
     "@babel/preset-env": "^7.10.4",
     "chai": "^4.2.0",
     "eslint": "^7.3.1",
-    "mocha": "^8.0.1",
+    "mocha": "^8.4.0",
     "nodemon": "^2.0.4",
+    "parcel": "^2.0.0-beta.3.1",
     "superagent": "^5.3.1",
     "supertest": "^4.0.2"
   }

@@ -21,6 +21,7 @@ export const start = async () => {
     app.use(bodyParser.urlencoded({ extended: true }));
     const port = 8000;
     app.set('port', port);
+    app.use(express.static('dist'));
 
     app.get('/', dashboard);
     app.get('/data', data);

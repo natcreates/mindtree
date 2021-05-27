@@ -3,7 +3,7 @@ import path from 'path';
 export default ({pg}) => {
     const dashboard = async (req, res, next) => {
         try {
-            res.status(200).sendFile(path.join(__dirname, '../index.html'));
+            res.status(200).sendFile(path.join(__dirname, '../../dist/index.html'));
         } catch (error) {
             next(error);
         }
