@@ -4,6 +4,7 @@ import {valueForm} from "./components/value-form";
 import {activitiesForm} from "./components/activities-form";
 import {activitiesList} from "./components/activities-list";
 import styles from "./styles";
+import {animate} from "./components/animate";
 
 const errorMessage = html`<p style="color: red;">There was a problem saving your changes.</p>`;
 
@@ -32,6 +33,7 @@ class MindtreeApp extends LitElement {
         const json = await response.json();
         this.values = json.values;
         this.activities = json.activities;
+        animate(this.shadowRoot);
     }
 
     async _addValue(e) {
@@ -176,8 +178,8 @@ class MindtreeApp extends LitElement {
             <h2>Activities</h2>
             ${activitiesForm(this._addActivity, this.values)}
             ${activitiesList(this.activities, this._logActivity, this._removeActivity)}
-
             ${this.error ? errorMessage : ''}
+            <slot></slot>
         `;
     }
 }

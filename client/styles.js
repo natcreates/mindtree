@@ -71,4 +71,8 @@ export default css`
     text-align: center;
   }
   
+  .tree {
+    max-width: 400px;
+  }
+  
 `;
