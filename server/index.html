@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Mindtree</title>
+    <style>
+        .leaf, .apple-branch, .apple { display: none; }
+    </style>
     <script type="module" src="../client/index.js"></script>
 </head>
 <body>
    <mindtree-app>
-       <svg class="tree" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
+       <svg width="600" class="tree" id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 808.68 983">
            <defs>
                <linearGradient id="linear-gradient" x1="523.59" y1="1002" x2="523.59" y2="107.23"
@@ -54,23 +57,23 @@
                <path id="trunk"
                      d="M511.4,1001.87C344,525.24,653.83,495.68,526.39,107.23c0,0,5.94,8.79,6.43,10,154.57,374.06-138,457.94,53.9,884.81Z"
                      transform="translate(-90.33 -19)" fill="url(#linear-gradient)"/>
-               <path id="branch-rt"
-                     d="M543.29,431.78C780.57,448.4,785,244.94,785,244.94c14.88,137.3-117.7,225.93-241.79,232.93Z"
-                     transform="translate(-90.33 -19)" fill="url(#linear-gradient-2)"/>
+               <path id="branch-lb"
+                     d="M479.33,757.85c-105.92,28.36-229.79-.62-264.68-111.25-1.67-5.26-9.93-22.69-9.93-22.69C218,761.37,365.78,821.28,488.71,803Z"
+                     transform="translate(-90.33 -19)" fill="url(#linear-gradient-5)"/>
                <path id="branch-rb"
                      d="M510.68,680.5c96.41,25.8,210.19-1.59,256.15-90.15,6.94-13.36.7-.24,8.53-18.5l5.21-13c-28.69,130.4-156.35,185.11-279.28,166.81Z"
                      transform="translate(-90.33 -19)" fill="url(#linear-gradient-3)"/>
                <path id="branch-lt"
                      d="M532.82,456.22C423.6,462.5,307.68,409.43,295.49,294.53c-.61-5.74-4.46-26.12-4.46-26.12C276.15,405.71,390.47,491,514.56,498Z"
                      transform="translate(-90.33 -19)" fill="url(#linear-gradient-4)"/>
-               <path id="branch-lb"
-                     d="M479.33,757.85c-105.92,28.36-229.79-.62-264.68-111.25-1.67-5.26-9.93-22.69-9.93-22.69C218,761.37,365.78,821.28,488.71,803Z"
-                     transform="translate(-90.33 -19)" fill="url(#linear-gradient-5)"/>
+               <path id="branch-rt"
+                     d="M543.29,431.78C780.57,448.4,785,244.94,785,244.94c14.88,137.3-117.7,225.93-241.79,232.93Z"
+                     transform="translate(-90.33 -19)" fill="url(#linear-gradient-2)"/>
            </g>
 
            <path d="M733.63,281.49" transform="translate(-90.33 -19)" fill="url(#linear-gradient-6)"/>
-           <g id="leaves-rt">
-               <g class="top-leaf">
+           <g id="leaves-rt" class="leaves">
+               <g class="leaf top-leaf">
                    <path d="M818.06,215.78c-1.75,34-33.07,53.85-33.07,53.85l5.83-113.32S820,178,818.06,215.78Z"
                          transform="translate(-90.33 -19)" fill="#090"/>
                    <path d="M757.61,213C755.86,247,785,270,785,270l5.82-113.32S759.55,175.25,757.61,213Z"
@@ -109,8 +112,8 @@
                          transform="translate(-90.33 -19)" fill="#cbccb1"/>
                </g>
            </g>
-           <g id="leaves-rb">
-               <g class="top-leaf">
+           <g id="leaves-rb" class="leaves">
+               <g class="leaf top-leaf">
                    <path d="M810.84,550.6c-9.17,28.66-40.43,38.55-40.43,38.55L801,493.62S821,518.76,810.84,550.6Z"
                          transform="translate(-90.33 -19)" fill="#090"/>
                    <path d="M759.79,534.58c-9.17,28.67,10.53,54.87,10.53,54.87l30.58-95.54S770,502.74,759.79,534.58Z"
@@ -149,8 +152,8 @@
                          transform="translate(-90.33 -19)" fill="#cbccb1"/>
                </g>
            </g>
-           <g id="leaves-lb">
-               <g class="top-leaf">
+           <g id="leaves-lb" class="leaves">
+               <g class="leaf top-leaf">
                    <path d="M222.93,576.74c8.34,31.34-14.27,58.48-14.27,58.48L180.87,530.75S213.67,541.91,222.93,576.74Z"
                          transform="translate(-90.33 -19)" fill="#090"/>
                    <path d="M167.3,591.88c8.34,31.35,41.45,43.67,41.45,43.67L181,531.07S158,557.06,167.3,591.88Z"
@@ -198,8 +201,8 @@
                          transform="translate(-90.33 -19)" fill="#cbccb1"/>
                </g>
            </g>
-           <g id="leaves-lt">
-               <g class="top-leaf">
+           <g id="leaves-lt" class="leaves">
+               <g class="leaf top-leaf">
                    <path d="M314,238c1.21,26.3-21.42,43.94-21.42,43.94l-4-87.68S312.7,208.8,314,238Z"
                          transform="translate(-90.33 -19)" fill="#090"/>
                    <path d="M267.29,240.45c1.21,26.3,25.35,41.79,25.35,41.79l-4-87.68S266,211.22,267.29,240.45Z"
@@ -246,8 +249,8 @@
                          transform="translate(-90.33 -19)" fill="#cbccb1"/>
                </g>
            </g>
-           <g id="leaves-top">
-               <g class="top-leaf">
+           <g id="leaves-top" class="leaves">
+               <g class="leaf top-leaf">
                    <path d="M543.41,62.53c12.05,31.83-8.66,62.59-8.66,62.59L494.58,19S530,27.15,543.41,62.53Z"
                          transform="translate(-90.33 -19)" fill="#090"/>
                    <path d="M486.94,84.28c12.05,31.83,47.93,41.17,47.93,41.17L494.71,19.33S473.55,48.9,486.94,84.28Z"
@@ -294,7 +297,6 @@
                          transform="translate(-90.33 -19)" fill="#a8ab84"/>
                </g>
            </g>
-
        </svg>
    </mindtree-app>
 </body>

@@ -71,8 +71,11 @@ export default css`
     text-align: center;
   }
   
+  svg {
+    visibility: hidden;
+  }
+  
   .tree {
     max-width: 400px;
   }
-  
 `;

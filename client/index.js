@@ -33,7 +33,7 @@ class MindtreeApp extends LitElement {
         const json = await response.json();
         this.values = json.values;
         this.activities = json.activities;
-        animate(this.shadowRoot);
+        animate(json.values);
     }
 
     async _addValue(e) {
@@ -119,21 +119,6 @@ class MindtreeApp extends LitElement {
         }
     }
 
-    async _removeActivity(e) {
-        const activityId = e.target.parentNode.id;
-        try {
-            const response = await fetch(`/activities/${activityId}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                this.activities = this.activities.filter((activity) => activity.activity_id !== activityId);
-            }
-        } catch (error) {
-            console.log(error);
-            this.error = true;
-        }
-    }
-
     async _removeAllValues() {
         try {
             const response = await fetch('/values', {method: 'DELETE'});
@@ -148,9 +133,25 @@ class MindtreeApp extends LitElement {
         }
     }
 
+    async _removeActivity(e) {
+        const activityId = e.target.parentNode.parentNode.id;
+        try {
+            const response = await fetch(`/activities/${activityId}`, {
+                method: 'DELETE',
+            });
+            if (response.ok) {
+                this.activities = this.activities.filter((activity) => activity.activity_id !== activityId);
+            }
+        } catch (error) {
+            console.log(error);
+            this.error = true;
+        }
+    }
+
     async _logActivity(e) {
         // TODO work out what happens when all associated values are deleted. Prompt user to select new value?
-        const activityId = e.target.parentNode.id;
+        const activityId = e.target.parentNode.parentNode.id;
+        console.log('activityId', activityId);
         try {
             const response = await fetch(`/activities/${activityId}`, {method: 'PUT'});
             if (response.ok) {
@@ -163,6 +164,8 @@ class MindtreeApp extends LitElement {
 
                 return this.fetchData();
             }
+            console.log('response.status', response.status);
+            const error = new Error('Problem logging activity')
             throw error;
         } catch (error) {
             console.log(error);
