@@ -5,6 +5,7 @@ import {activitiesForm} from "./components/activities-form";
 import {activitiesList} from "./components/activities-list";
 import styles from "./styles";
 import {animate} from "./components/animate/animate";
+import {addActivity, fetchData, logActivity, removeActivity} from "./api";
 
 const errorMessage = html`<p style="color: red;">There was a problem saving your changes.</p>`;
 
@@ -14,7 +15,7 @@ class MindtreeApp extends LitElement {
             values: {type: Array},
             activities: {type: Array},
             error: {type: Boolean},
-            timeline: { type: Object }
+            timeline: {type: Object}
         }
     }
 
@@ -30,12 +31,11 @@ class MindtreeApp extends LitElement {
     }
 
     async fetchData() {
-        const response = await fetch('/values');
-        const json = await response.json();
-        this.values = json.values;
-        this.activities = json.activities;
+        const {values, activities} = await fetchData();
+        this.values = values;
+        this.activities = activities;
         setTimeout(() => {
-            this.timeline = animate(json.values, this.timeline);
+            this.timeline = animate(values, this.timeline);
         }, 300);
     }
 
@@ -53,7 +53,7 @@ class MindtreeApp extends LitElement {
                 body: JSON.stringify({name}),
             });
             if (response.ok) {
-                const { value_id } = await response.json();
+                const {value_id} = await response.json();
                 input.value = '';
                 this.values = [
                     ...this.values,
@@ -95,27 +95,15 @@ class MindtreeApp extends LitElement {
         const valueId = activityValueInput.value;
         const weight = activityWeightInput.value;
         try {
-            const response = await fetch('/activities', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({name, valueId, weight}),
-            });
-            if (response.ok) {
-                const { activity_id } = await response.json();
-                activityNameInput.value = '';
-                activityValueInput.value = '';
-                activityWeightInput.value = '';
-                this.error = false;
-                return this.activities = [
-                    ...this.activities,
-                    {name, weight, value_id: valueId, activity_id}
-                ];
-            } else {
-                throw error;
-            }
-
+            const activity_id = await addActivity(name, valueId, weight);
+            activityNameInput.value = '';
+            activityValueInput.value = '';
+            activityWeightInput.value = '';
+            this.error = false;
+            return this.activities = [
+                ...this.activities,
+                {name, weight, value_id: valueId, activity_id}
+            ];
         } catch (error) {
             console.log(error);
             this.error = true;
@@ -139,12 +127,8 @@ class MindtreeApp extends LitElement {
     async _removeActivity(e) {
         const activityId = e.target.parentNode.parentNode.id;
         try {
-            const response = await fetch(`/activities/${activityId}`, {
-                method: 'DELETE',
-            });
-            if (response.ok) {
-                this.activities = this.activities.filter((activity) => activity.activity_id !== activityId);
-            }
+            await removeActivity(activityId);
+            this.activities = this.activities.filter((activity) => activity.activity_id !== activityId);
         } catch (error) {
             console.log(error);
             this.error = true;
@@ -156,19 +140,15 @@ class MindtreeApp extends LitElement {
         const activityId = e.target.parentNode.parentNode.id;
         console.log('activityId', activityId);
         try {
-            const response = await fetch(`/activities/${activityId}`, {method: 'PUT'});
-            if (response.ok) {
-                this.error = false;
-                const { valueIds } = await response.json();
-                valueIds.forEach((valueId) => {
-                    const value = this.shadowRoot.getElementById(valueId);
-                    value.firstElementChild.classList.add('increase');
-                })
+            const response = await logActivity(activityId);
+            this.error = false;
+            const {valueIds} = response;
+            valueIds.forEach((valueId) => {
+                const value = this.shadowRoot.getElementById(valueId);
+                value.firstElementChild.classList.add('increase');
+            })
 
-                return this.fetchData();
-            }
-            const error = new Error('Problem logging activity')
-            throw error;
+            return this.fetchData();
         } catch (error) {
             console.log(error);
             this.error = true;
@@ -178,15 +158,15 @@ class MindtreeApp extends LitElement {
     render() {
         return html`
             <div class="app">
-            <h2>Values</h2>
-            ${valuesList(this.values, this._removeValue)}
-            ${valueForm(this._addValue, this._removeAllValues)}
-            <h2>Activities</h2>
-            ${activitiesForm(this._addActivity, this.values)}
-            ${activitiesList(this.activities, this._logActivity, this._removeActivity)}
-            ${this.error ? errorMessage : ''}
-            <slot></slot>
-            </div>    
+                <h2>Values</h2>
+                ${valuesList(this.values, this._removeValue)}
+                ${valueForm(this._addValue, this._removeAllValues)}
+                <h2>Activities</h2>
+                ${activitiesForm(this._addActivity, this.values)}
+                ${activitiesList(this.activities, this._logActivity, this._removeActivity)}
+                ${this.error ? errorMessage : ''}
+                <slot></slot>
+            </div>
         `;
     }
 }

@@ -1,7 +1,7 @@
 import enableVisibility from "./enableVisibility";
 import {ANIMATION_DEFAULT} from "./constants";
 
-export default (timeline, scoresKeyedByValueId, valueScoresMap) => {
+export default (timeline, scoresKeyedByValueId, branchToValueIdMap) => {
     const branchTransformMap = {
         'leaves-lb': "right top",
         'leaves-rb': "left top",
@@ -10,8 +10,8 @@ export default (timeline, scoresKeyedByValueId, valueScoresMap) => {
         'leaves-top': "right top",
     };
 
-    return Object.keys(scoresKeyedByValueId).map((branch) => {
-        if (valueScoresMap[branch] >= 50) {
+    return Object.keys(branchToValueIdMap).filter((branch) => branchToValueIdMap[branch]).map((branch) => {
+        if (scoresKeyedByValueId[branchToValueIdMap[branch]] >= 50) {
             enableVisibility(branch, 'apple-branch');
             enableVisibility(branch, 'apple');
             timeline.from(`#${branch} .apple-branch`, {
