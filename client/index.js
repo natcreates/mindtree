@@ -4,7 +4,7 @@ import {valueForm} from "./components/value-form";
 import {activitiesForm} from "./components/activities-form";
 import {activitiesList} from "./components/activities-list";
 import styles from "./styles";
-import {animate} from "./components/animate";
+import {animate} from "./components/animate/animate";
 
 const errorMessage = html`<p style="color: red;">There was a problem saving your changes.</p>`;
 
@@ -14,6 +14,7 @@ class MindtreeApp extends LitElement {
             values: {type: Array},
             activities: {type: Array},
             error: {type: Boolean},
+            timeline: { type: Object }
         }
     }
 
@@ -33,7 +34,9 @@ class MindtreeApp extends LitElement {
         const json = await response.json();
         this.values = json.values;
         this.activities = json.activities;
-        animate(json.values);
+        setTimeout(() => {
+            this.timeline = animate(json.values, this.timeline);
+        }, 300);
     }
 
     async _addValue(e) {
@@ -164,7 +167,6 @@ class MindtreeApp extends LitElement {
 
                 return this.fetchData();
             }
-            console.log('response.status', response.status);
             const error = new Error('Problem logging activity')
             throw error;
         } catch (error) {
@@ -175,6 +177,7 @@ class MindtreeApp extends LitElement {
 
     render() {
         return html`
+            <div class="app">
             <h2>Values</h2>
             ${valuesList(this.values, this._removeValue)}
             ${valueForm(this._addValue, this._removeAllValues)}
@@ -183,6 +186,7 @@ class MindtreeApp extends LitElement {
             ${activitiesList(this.activities, this._logActivity, this._removeActivity)}
             ${this.error ? errorMessage : ''}
             <slot></slot>
+            </div>    
         `;
     }
 }
